@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "states": [
+    "BOOT",
+    "IDLE",
+    "AWAKE",
+    "LISTEN",
+    "THINKING",
+    "TALK",
+    "ERROR",
+    "OFFLINE"
+  ],
+  "expressions": [
+    "BOOT",
+    "IDLE",
+    "ATTENTIVE",
+    "LISTEN",
+    "THINKING",
+    "TALKING",
+    "HAPPY",
+    "CURIOUS",
+    "CONFUSED",
+    "ERROR",
+    "OFFLINE"
+  ],
+  "emotions": ["HAPPY", "CURIOUS", "CONFUSED", "ATTENTIVE"],
+  "rings": [
+    "off",
+    "blue_steady",
+    "cyan_pulse",
+    "purple_thinking",
+    "green_ok",
+    "red_error",
+    "red_slow_pulse",
+    "dim_idle"
+  ]
+}
