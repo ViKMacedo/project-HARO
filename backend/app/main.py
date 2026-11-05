@@ -6,8 +6,8 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from brain import build_system_prompt, split_emotion_tag
-from state_machine import State, EXPRESSION_MAP, RING_MAP, can_transition
+from backend.app.services.brain import build_system_prompt, split_emotion_tag
+from backend.app.core.state_machine import State, EXPRESSION_MAP, RING_MAP, can_transition
 
 
 # ---------- Conexões WebSocket ----------
