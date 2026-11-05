@@ -14,12 +14,12 @@
       {
         "title": "HARO",
         "width": 360,
-        "height": 480,
+        "height": 360,
         "resizable": false,
-        "decorations": true,
+        "decorations": false,
         "transparent": true,
-        "alwaysOnTop": false,
-        "skipTaskbar": false
+        "alwaysOnTop": true,
+        "skipTaskbar": true
       }
     ],
     "security": {

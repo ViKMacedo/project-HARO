@@ -1,51 +1,66 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
+import { Face } from "./components/Face";
+import { useHaroSocket } from "./hooks/useHaroSocket";
+import type { HaroEvent } from "./types/types";
 import "./App.css";
-
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
-
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
+const API = "http://127.0.0.1:8000";
+export default function App() {
+  const [expression, setExpression] = useState("IDLE");
+  const [ring, setRing] = useState("dim_idle");
+  const [emotion, setEmotion] = useState<string | null>(null);
+  const [text, setText] = useState("");
+  const [input, setInput] = useState("");
+  const connected = useHaroSocket((event: HaroEvent) => {
+    if (event.type === "state_change") {
+      setExpression(event.expression);
+      setRing(event.ring);
+      setEmotion(null); // a emoção vale só durante a fala atual
+    } else if (event.type === "transcript") {
+      setText(event.text);
+      setEmotion(event.emotion);
+    }
+  });
+  // Sem conexão com o cérebro, o corpo mostra OFFLINE.
+  // Falando com uma emoção escolhida pela IA, a emoção vence a expressão genérica.
+  let shownExpression = expression;
+  let shownRing = ring;
+  if (!connected) {
+    shownExpression = "OFFLINE";
+    shownRing = "red_slow_pulse";
+  } else if (expression === "TALKING" && emotion) {
+    shownExpression = emotion;
   }
-
+  async function send() {
+    const message = input.trim();
+    if (!message) return;
+    setInput("");
+    try {
+      const res = await fetch(`${API}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setText(err.detail ?? "Algo deu errado.");
+      }
+    } catch {
+      setText("Não consegui falar com o meu cérebro.");
+    }
+  }
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
+    <div className="stage">
+      <Face expression={shownExpression} ring={shownRing} />
+      {text && <div className="bubble">{text}</div>}
+      <div className="chat">
         <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
+          value={input}
+          placeholder="Fale com o HARO..."
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && send()}
         />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+        <button onClick={send}>Enviar</button>
+      </div>
+    </div>
   );
 }
-
-export default App;
