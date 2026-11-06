@@ -45,7 +45,7 @@ export default function App() {
         setText(err.detail ?? "Algo deu errado.");
       }
     } catch {
-      setText("Não consegui falar com o meu cérebro.");
+      setText("Haro não consegue falar, Haro offline.");
     }
   }
   return (

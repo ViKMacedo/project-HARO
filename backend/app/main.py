@@ -129,9 +129,10 @@ class ChatIn(BaseModel):
 
 
 DEMO_REPLIES = [
-    "[CURIOUS] Hmm, interessante! Me conta mais sobre isso.",
-    "[HAPPY] Que bom ter companhia! Estou em modo demonstração.",
-    "[CONFUSED] Não sei se entendi tudo, mas adorei a conversa.",
+    "[CURIOUS] Haro interessado, Piloto. Conta mais sobre isso?",
+    "[HAPPY] Haro feliz em ter companhia, Piloto!",
+    "[CONFUSED] Haro não entendeu tudo, Piloto.",
+    "[ATTENTIVE] Haro se preocupa com Piloto"
 ]
 
 
